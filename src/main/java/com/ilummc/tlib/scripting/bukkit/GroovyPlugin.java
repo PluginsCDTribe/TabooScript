@@ -1,7 +1,7 @@
 package com.ilummc.tlib.scripting.bukkit;
 
-import com.ilummc.tlib.scripting.TabooScriptMain;
-import com.ilummc.tlib.scripting.script.GroovyPluginApi;
+import com.ilummc.tlib.scripting.TabooScript;
+import com.ilummc.tlib.scripting.groovy.GroovyProcessor;
 import groovy.lang.GroovyObject;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -24,21 +24,26 @@ public class GroovyPlugin extends PluginBase implements Plugin {
 
     private boolean enabled = false;
 
+    private GroovyProcessor api;
     private GroovyPluginLoader loader;
     private GroovyObject groovyObject;
 
     private PluginDescriptionFile description;
+    private File file;
 
-    public GroovyPlugin(GroovyPluginLoader loader, GroovyObject groovyObject) {
+    public GroovyPlugin(GroovyPluginLoader loader, GroovyObject groovyObject, File file) {
         this.loader = loader;
         this.groovyObject = groovyObject;
+        this.file = file;
     }
 
-    private GroovyPluginApi api;
+    public File getFile() {
+        return file;
+    }
 
     @Override
     public File getDataFolder() {
-        return TabooScriptMain.instance().getConf().getDataFolder(this);
+        return new File(TabooScript.getConf().getString("scriptDir") + "/" + getName());
     }
 
     @Override
@@ -142,11 +147,11 @@ public class GroovyPlugin extends PluginBase implements Plugin {
         return null;
     }
 
-    public GroovyPluginApi getApi() {
+    public GroovyProcessor getAPI() {
         return api;
     }
 
-    void setApi(GroovyPluginApi api) {
+    void setAPI(GroovyProcessor api) {
         this.api = api;
     }
 
@@ -160,12 +165,10 @@ public class GroovyPlugin extends PluginBase implements Plugin {
     }
 
     public static Plugin getProviderPlugin(Class<?> clazz) {
-        if (clazz.getClassLoader() instanceof GroovyPluginClassLoader) {
-            return ((GroovyPluginClassLoader) clazz.getClassLoader()).plugin;
-        } else return JavaPlugin.getPlugin(TabooScriptMain.class);
+        return clazz.getClassLoader() instanceof GroovyPluginClassLoader ? ((GroovyPluginClassLoader) clazz.getClassLoader()).plugin : JavaPlugin.getPlugin(TabooScript.class);
     }
 
-    GroovyObject getGroovyObject() {
+    public GroovyObject getGroovyObject() {
         return groovyObject;
     }
 
