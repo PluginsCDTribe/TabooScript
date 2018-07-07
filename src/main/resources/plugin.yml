@@ -1,0 +1,5 @@
+name: TabooScript
+authors: [IzzelAliz, Bkm016]
+main: com.ilummc.tlib.scripting.TabooScriptMain
+version: @version@
+softdepend: [TabooLib]

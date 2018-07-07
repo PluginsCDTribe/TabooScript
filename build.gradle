@@ -1,0 +1,33 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+version = pluginVersion
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+defaultTasks 'build'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://bkm016.github.io/TabooLib/repo/' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'http://repo.extendedclip.com/content/repositories/placeholderapi/' }
+}
+
+dependencies {
+    compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.0'
+    compile 'org.ow2.asm:asm-commons:6.2'
+    implementation 'com.github.Bkm016:TabooLib:master-SNAPSHOT'
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+

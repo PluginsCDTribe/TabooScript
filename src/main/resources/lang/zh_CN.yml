@@ -1,0 +1,7 @@
+LOADING_SCRIPTS: '正在加载脚本 ....'
+NOT_VALID_SCRIPT: '{0} 不是一个有效的脚本'
+ENABLE_ERROR: '脚本 {0} 加载时发生错误：{1}'
+DISABLE_ERROR: '脚本 {0} 卸载时发生错误：{1}'
+ENABLE_SCRIPT: '正在加载脚本 {0}'
+DISABLE_SCRIPT: '正在卸载脚本 {0}'
+EVENT_REGISTER: '脚本 {0} 注册了事件 {1}'
