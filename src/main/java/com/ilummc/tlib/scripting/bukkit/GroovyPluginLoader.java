@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import com.ilummc.tlib.resources.TLocale;
-import com.ilummc.tlib.scripting.api.GroovyPluginApi;
-import com.ilummc.tlib.scripting.api.SingleListener;
-import com.ilummc.tlib.scripting.api.TabooScriptingApi;
+import com.ilummc.tlib.scripting.scriptapi.GroovyPluginApi;
+import com.ilummc.tlib.scripting.scriptapi.SingleListener;
+import com.ilummc.tlib.scripting.scriptapi.TabooScriptingApi;
 import com.ilummc.tlib.scripting.util.Entries;
 import groovy.lang.GroovyObject;
 import org.bukkit.Bukkit;
@@ -66,7 +66,7 @@ public class GroovyPluginLoader implements PluginLoader {
             Class clazz = loader.parseClass(s);
             Object o = clazz.newInstance();
             if (o instanceof GroovyObject) {
-                GroovyPlugin plugin = new GroovyPlugin(this);
+                GroovyPlugin plugin = new GroovyPlugin(this, ((GroovyObject) o));
                 GroovyPluginApi api = new GroovyPluginApi(plugin);
                 plugin.setApi(api);
                 ((GroovyObject) o).setProperty("bukkit", Bukkit.getServer());

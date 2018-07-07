@@ -1,4 +1,4 @@
-package com.ilummc.tlib.scripting.api;
+package com.ilummc.tlib.scripting.scriptapi;
 
 import org.bukkit.Color;
 import org.bukkit.potion.PotionEffect;

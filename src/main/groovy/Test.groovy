@@ -1,12 +1,13 @@
-import com.ilummc.tlib.scripting.api.GroovyPluginApi
-import com.ilummc.tlib.scripting.api.TabooScriptingApi
+// 到第九行的这一部分完全可以删除，但是删掉之后idea没有补全
+import com.ilummc.tlib.scripting.scriptapi.GroovyPluginApi
+import com.ilummc.tlib.scripting.scriptapi.TabooScriptingApi
 import org.bukkit.Bukkit
-import org.bukkit.event.Event
-import org.bukkit.event.player.AsyncPlayerChatEvent
-
 def plugin = new GroovyPluginApi(null)
 def api = new TabooScriptingApi()
 def bukkit = Bukkit.getServer()
+// 下面的就按需import/删除
+
+import org.bukkit.event.player.AsyncPlayerChatEvent
 
 plugin.onEnable {
     listen { AsyncPlayerChatEvent event ->
@@ -26,6 +27,7 @@ plugin.onEnable {
                 }
             }
         bukkit.getPlayer 'xxx'
+        command 'say hello'
     }
     listen('AsyncPlayerChatEvent') {
         if (it.message == 'test2')
@@ -38,5 +40,3 @@ plugin.description {
     version '1.0'
     depend 'TabooLib', 'Vault'
 }
-
-println Event.asSubclass(AsyncPlayerChatEvent)

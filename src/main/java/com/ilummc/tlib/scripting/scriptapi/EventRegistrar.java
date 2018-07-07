@@ -1,4 +1,4 @@
-package com.ilummc.tlib.scripting.api;
+package com.ilummc.tlib.scripting.scriptapi;
 
 import com.google.common.collect.ImmutableList;
 import com.ilummc.tlib.resources.TLocale;

@@ -1,7 +1,8 @@
 package com.ilummc.tlib.scripting.bukkit;
 
 import com.ilummc.tlib.scripting.TabooScriptMain;
-import com.ilummc.tlib.scripting.api.GroovyPluginApi;
+import com.ilummc.tlib.scripting.scriptapi.GroovyPluginApi;
+import groovy.lang.GroovyObject;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -24,11 +25,13 @@ public class GroovyPlugin extends PluginBase implements Plugin {
     private boolean enabled = false;
 
     private GroovyPluginLoader loader;
+    private GroovyObject groovyObject;
 
     private PluginDescriptionFile description;
 
-    public GroovyPlugin(GroovyPluginLoader loader) {
+    public GroovyPlugin(GroovyPluginLoader loader, GroovyObject groovyObject) {
         this.loader = loader;
+        this.groovyObject = groovyObject;
     }
 
     private GroovyPluginApi api;
@@ -160,6 +163,14 @@ public class GroovyPlugin extends PluginBase implements Plugin {
         if (clazz.getClassLoader() instanceof GroovyPluginClassLoader) {
             return ((GroovyPluginClassLoader) clazz.getClassLoader()).plugin;
         } else return JavaPlugin.getPlugin(TabooScriptMain.class);
+    }
+
+    GroovyObject getGroovyObject() {
+        return groovyObject;
+    }
+
+    public void addProperty(String name, Object object) {
+        groovyObject.setProperty(name, object);
     }
 
 }

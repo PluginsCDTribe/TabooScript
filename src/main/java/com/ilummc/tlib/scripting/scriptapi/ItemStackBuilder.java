@@ -1,4 +1,4 @@
-package com.ilummc.tlib.scripting.api;
+package com.ilummc.tlib.scripting.scriptapi;
 
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;

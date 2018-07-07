@@ -1,9 +1,10 @@
-package com.ilummc.tlib.scripting.api;
+package com.ilummc.tlib.scripting.scriptapi;
 
 import com.ilummc.tlib.scripting.bukkit.DescriptionSpec;
 import com.ilummc.tlib.scripting.bukkit.GroovyPlugin;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import groovy.lang.GroovyObjectSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -13,7 +14,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.util.Collection;
 
-public class GroovyPluginApi {
+public class GroovyPluginApi extends GroovyObjectSupport {
 
     private final GroovyPlugin plugin;
 
