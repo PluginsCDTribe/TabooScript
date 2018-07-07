@@ -1,5 +1,6 @@
-package com.ilummc.tlib.scripting.scriptapi;
+package com.ilummc.tlib.scripting.script.builder;
 
+import com.ilummc.tlib.scripting.script.InternalAPI;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import org.bukkit.Color;
@@ -25,7 +26,7 @@ public class ItemStackBuilder {
 
     public ItemStackBuilder potionEffect(@DelegatesTo(value = PotionEffectBuilder.class, strategy = Closure.DELEGATE_ONLY) Closure closure) {
         PotionMeta itemMeta = (PotionMeta) ins.getItemMeta();
-        itemMeta.addCustomEffect(InternalApi.INSTANCE.effect(closure), true);
+        itemMeta.addCustomEffect(InternalAPI.INSTANCE.effect(closure), true);
         ins.setItemMeta(itemMeta);
         return this;
     }

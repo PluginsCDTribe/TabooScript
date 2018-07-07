@@ -1,7 +1,7 @@
 package com.ilummc.tlib.scripting.bukkit;
 
 import com.ilummc.tlib.scripting.TabooScriptMain;
-import com.ilummc.tlib.scripting.scriptapi.GroovyPluginApi;
+import com.ilummc.tlib.scripting.script.GroovyPluginApi;
 import groovy.lang.GroovyObject;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
