@@ -8,7 +8,7 @@ version = pluginVersion
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-defaultTasks 'build'
+defaultTasks 'clean', 'build'
 
 repositories {
     mavenCentral()
