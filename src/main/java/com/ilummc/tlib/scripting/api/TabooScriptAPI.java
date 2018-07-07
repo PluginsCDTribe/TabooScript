@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TabooScriptApi {
+public class TabooScriptAPI {
 
     private static Map<String, Class<?>> registeredProperties = new HashMap<>();
 
