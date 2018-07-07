@@ -22,7 +22,7 @@ public class TabooScriptMain extends JavaPlugin {
 
     private TsConfig config;
 
-    @Logger(level = 1)
+    @Logger(level = 2)
     private TLogger logger;
 
     @Override
