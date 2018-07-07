@@ -1,5 +1,8 @@
 package com.ilummc.tlib.scripting.scriptapi;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.ilummc.tlib.resources.TLocale;
 import com.ilummc.tlib.scripting.PropertyGroovyObject;
 import com.ilummc.tlib.scripting.bukkit.DescriptionSpec;
 import com.ilummc.tlib.scripting.bukkit.EventRegistrar;
@@ -9,11 +12,18 @@ import groovy.lang.DelegatesTo;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GroovyPluginApi extends PropertyGroovyObject {
 
@@ -34,6 +44,37 @@ public class GroovyPluginApi extends PropertyGroovyObject {
 
     public GroovyPlugin getBukkit() {
         return plugin;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void onCommand(String cmd, Closure onCommand) {
+        if (onCommand.getParameterTypes().length < 2) {
+            TLocale.Logger.warn("COMMAND_ARGS_LENGTH");
+        } else {
+            try {
+                Field commandMapF = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+                commandMapF.setAccessible(true);
+                SimpleCommandMap commandMap = (SimpleCommandMap) commandMapF.get(Bukkit.getServer());
+                Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
+                constructor.setAccessible(true);
+                PluginCommand command = constructor.newInstance(cmd, plugin);
+                command.setExecutor((sender, command1, label, args) -> {
+                    onCommand.call(sender, args);
+                    return true;
+                });
+                command.setTabCompleter((sender, command12, alias, args) -> ImmutableList.of());
+                commandMap.register(cmd, command);
+                Field commandsF = plugin.getDescription().getClass().getDeclaredField("commands");
+                commandsF.setAccessible(true);
+                Map<String, Object> map = (Map) commandsF.get(plugin.getDescription());
+                if (map == null) map = new HashMap<>(0);
+                map.put(cmd, ImmutableMap.of());
+                commandsF.set(plugin.getDescription(), map);
+                TLocale.Logger.fine("COMMAND_REGISTERED", plugin.toString(), cmd);
+            } catch (Exception e) {
+                TLocale.Logger.error("COMMAND_REGISTER_ERROR", e.toString());
+            }
+        }
     }
 
     public Closure getOnEnable() {
@@ -171,6 +212,10 @@ public class GroovyPluginApi extends PropertyGroovyObject {
 
     public void command(String cmd, CommandSender sender) {
         Bukkit.dispatchCommand(sender, cmd);
+    }
+
+    public void broadcast(String text) {
+        Bukkit.broadcastMessage(text);
     }
 
 }

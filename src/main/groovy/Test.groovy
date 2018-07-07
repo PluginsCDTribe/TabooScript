@@ -1,17 +1,9 @@
-// 到第九行的这一部分完全可以删除，但是删掉之后idea没有补全
-import com.ilummc.tlib.scripting.scriptapi.GroovyPluginApi
-import com.ilummc.tlib.scripting.scriptapi.InternalApi
-import org.bukkit.Bukkit
-def plugin = new GroovyPluginApi(null)
-def api = new InternalApi()
-def bukkit = Bukkit.getServer()
-// 下面的就按需import/删除
-
-import org.bukkit.event.player.AsyncPlayerChatEvent
 
 plugin.onEnable {
-    listen { AsyncPlayerChatEvent event ->
+    // 两种监听方式
+    listen { org.bukkit.event.player.AsyncPlayerChatEvent event ->
         if (event.message == 'test')
+            // 给玩家物品
             event.player.inventory.addItem api.item {
                 type 'POTION'
                 enchant LUCK: 1, DAMAGE: 2
@@ -26,9 +18,8 @@ plugin.onEnable {
                     particle false
                 }
             }
-        bukkit.getPlayer 'xxx'
-        command 'say hello'
     }
+
     listen('AsyncPlayerChatEvent') {
         if (it.message == 'test2')
             it.player.sendMessage 'No type register'
@@ -38,5 +29,4 @@ plugin.onEnable {
 plugin.description {
     name 'Test'
     version '1.0'
-    depend 'TabooLib', 'Vault'
 }

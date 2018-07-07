@@ -38,7 +38,7 @@ public class EventRegistrar {
         }
     }
 
-    private static boolean isSubClass(Class<?> sub, Class<?> superClass) {
+    public static boolean isSubClass(Class<?> sub, Class<?> superClass) {
         try {
             sub.asSubclass(superClass);
             return true;

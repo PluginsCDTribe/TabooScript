@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import com.ilummc.tlib.resources.TLocale;
+import com.ilummc.tlib.scripting.api.TabooScriptApi;
 import com.ilummc.tlib.scripting.scriptapi.GroovyPluginApi;
 import com.ilummc.tlib.scripting.scriptapi.InternalApi;
 import com.ilummc.tlib.scripting.util.Entries;
@@ -77,6 +78,7 @@ public class GroovyPluginLoader implements PluginLoader {
                 fileMap.put(file, plugin);
                 loader.setPlugin(plugin);
                 plugin.setDescription(descriptionFile);
+                TabooScriptApi.addProperties(plugin);
                 return Entries.of(descriptionFile, plugin);
             } else {
                 TLocale.Logger.warn("NOT_VALID_SCRIPT", file.getName());
