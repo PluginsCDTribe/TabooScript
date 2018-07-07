@@ -1,4 +1,4 @@
-package com.ilummc.tlib.scripting.scriptapi;
+package com.ilummc.tlib.scripting.bukkit;
 
 import com.google.common.collect.ImmutableList;
 import com.ilummc.tlib.resources.TLocale;
@@ -19,7 +19,7 @@ public class EventRegistrar {
             "org.bukkit.event.world.", "org.spigotmc.event.player.", "org.spigotmc.event.entity.",
             "me.skymc.taboolib.events.", "me.skymc.taboolib.events.itag.");
 
-    static Optional<Class<?>> findEvent(String name) {
+    public static Optional<Class<?>> findEvent(String name) {
         for (String s : packages) {
             try {
                 return Optional.ofNullable(Class.forName(s + name));
@@ -30,7 +30,7 @@ public class EventRegistrar {
     }
 
     @SuppressWarnings("unchecked")
-    static void register(Class<?> clazz, EventPriority priority, boolean ignoreCancelled, Closure closure, Plugin plugin) {
+    public static void register(Class<?> clazz, EventPriority priority, boolean ignoreCancelled, Closure closure, Plugin plugin) {
         if (isSubClass(clazz, Event.class)) {
             TLocale.Logger.fine("EVENT_REGISTER", plugin.toString(), clazz.getSimpleName());
             Bukkit.getPluginManager().registerEvents(SingleListener.of(((Class<? extends Event>) clazz), priority, ignoreCancelled, closure),

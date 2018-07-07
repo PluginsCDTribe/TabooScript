@@ -5,7 +5,9 @@ import com.ilummc.tlib.annotations.Logger;
 import com.ilummc.tlib.inject.TDependencyInjector;
 import com.ilummc.tlib.logger.TLogger;
 import com.ilummc.tlib.resources.TLocale;
+import com.ilummc.tlib.scripting.api.TabooScriptApi;
 import com.ilummc.tlib.scripting.bukkit.GroovyPluginLoader;
+import com.ilummc.tlib.scripting.tlib.TabooLibApi;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,6 +34,7 @@ public class TabooScriptMain extends JavaPlugin {
         File file = new File(config.getScriptDir());
         if (!file.isDirectory()) file.mkdirs();
         Bukkit.getPluginManager().loadPlugins(file);
+        TabooScriptApi.registerProperty("tlib", TabooLibApi.class);
     }
 
     public TsConfig getConf() {

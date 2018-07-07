@@ -1,4 +1,4 @@
-package com.ilummc.tlib.scripting.scriptapi;
+package com.ilummc.tlib.scripting.bukkit;
 
 import groovy.lang.Closure;
 import org.bukkit.event.Event;

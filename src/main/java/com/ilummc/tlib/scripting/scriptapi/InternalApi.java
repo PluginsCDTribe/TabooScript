@@ -5,9 +5,9 @@ import groovy.lang.DelegatesTo;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
-public class TabooScriptingApi {
+public class InternalApi {
 
-    public static final TabooScriptingApi INSTANCE = new TabooScriptingApi();
+    public static final InternalApi INSTANCE = new InternalApi();
 
     public PotionEffect effect(@DelegatesTo(value = PotionEffectBuilder.class, strategy = Closure.DELEGATE_ONLY) Closure closure) {
         PotionEffectBuilder builder = new PotionEffectBuilder();

@@ -1,10 +1,11 @@
 package com.ilummc.tlib.scripting.scriptapi;
 
+import com.ilummc.tlib.scripting.PropertyGroovyObject;
 import com.ilummc.tlib.scripting.bukkit.DescriptionSpec;
+import com.ilummc.tlib.scripting.bukkit.EventRegistrar;
 import com.ilummc.tlib.scripting.bukkit.GroovyPlugin;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
-import groovy.lang.GroovyObjectSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -14,15 +15,16 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.util.Collection;
 
-public class GroovyPluginApi extends GroovyObjectSupport {
+public class GroovyPluginApi extends PropertyGroovyObject {
 
     private final GroovyPlugin plugin;
 
-    private final TabooScriptingApi api = TabooScriptingApi.INSTANCE;
+    private final InternalApi api = InternalApi.INSTANCE;
 
     private final Server bukkit = Bukkit.getServer();
 
     public GroovyPluginApi(GroovyPlugin plugin) {
+        super();
         this.plugin = plugin;
     }
 

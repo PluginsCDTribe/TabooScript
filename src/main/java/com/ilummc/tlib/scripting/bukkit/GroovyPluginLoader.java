@@ -5,8 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import com.ilummc.tlib.resources.TLocale;
 import com.ilummc.tlib.scripting.scriptapi.GroovyPluginApi;
-import com.ilummc.tlib.scripting.scriptapi.SingleListener;
-import com.ilummc.tlib.scripting.scriptapi.TabooScriptingApi;
+import com.ilummc.tlib.scripting.scriptapi.InternalApi;
 import com.ilummc.tlib.scripting.util.Entries;
 import groovy.lang.GroovyObject;
 import org.bukkit.Bukkit;
@@ -25,9 +24,9 @@ import java.util.regex.Pattern;
 
 public class GroovyPluginLoader implements PluginLoader {
 
-    private static final Pattern[] PATTERNS = {Pattern.compile("\\.groovy$")};
+    private static final Pattern[] PATTERNS = {Pattern.compile("[^\\-]*\\.groovy$")};
 
-    private final Map<String, GroovyPlugin> pluginMap = new HashMap<>();
+    private static final Map<String, GroovyPlugin> pluginMap = new HashMap<>();
 
     private final Map<File, GroovyPlugin> fileMap = new HashMap<>();
 
@@ -70,7 +69,7 @@ public class GroovyPluginLoader implements PluginLoader {
                 GroovyPluginApi api = new GroovyPluginApi(plugin);
                 plugin.setApi(api);
                 ((GroovyObject) o).setProperty("bukkit", Bukkit.getServer());
-                ((GroovyObject) o).setProperty("api", TabooScriptingApi.INSTANCE);
+                ((GroovyObject) o).setProperty("api", InternalApi.INSTANCE);
                 ((GroovyObject) o).setProperty("plugin", api);
                 ((GroovyObject) o).invokeMethod("run", new Object[0]);
                 PluginDescriptionFile descriptionFile = api.toDescription(o);
@@ -134,6 +133,10 @@ public class GroovyPluginLoader implements PluginLoader {
             TLocale.Logger.error("DISABLE_ERROR", plugin.getName(), e.toString());
             e.printStackTrace();
         }
+    }
+
+    public static Map<String, GroovyPlugin> getPlugins() {
+        return pluginMap;
     }
 
 }

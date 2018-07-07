@@ -1,9 +1,9 @@
 // 到第九行的这一部分完全可以删除，但是删掉之后idea没有补全
 import com.ilummc.tlib.scripting.scriptapi.GroovyPluginApi
-import com.ilummc.tlib.scripting.scriptapi.TabooScriptingApi
+import com.ilummc.tlib.scripting.scriptapi.InternalApi
 import org.bukkit.Bukkit
 def plugin = new GroovyPluginApi(null)
-def api = new TabooScriptingApi()
+def api = new InternalApi()
 def bukkit = Bukkit.getServer()
 // 下面的就按需import/删除
 

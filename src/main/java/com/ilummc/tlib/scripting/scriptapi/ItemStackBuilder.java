@@ -25,7 +25,7 @@ public class ItemStackBuilder {
 
     public ItemStackBuilder potionEffect(@DelegatesTo(value = PotionEffectBuilder.class, strategy = Closure.DELEGATE_ONLY) Closure closure) {
         PotionMeta itemMeta = (PotionMeta) ins.getItemMeta();
-        itemMeta.addCustomEffect(TabooScriptingApi.INSTANCE.effect(closure), true);
+        itemMeta.addCustomEffect(InternalApi.INSTANCE.effect(closure), true);
         ins.setItemMeta(itemMeta);
         return this;
     }

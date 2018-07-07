@@ -171,6 +171,7 @@ public class GroovyPlugin extends PluginBase implements Plugin {
 
     public void addProperty(String name, Object object) {
         groovyObject.setProperty(name, object);
+        api.setProperty(name, object);
     }
 
 }
