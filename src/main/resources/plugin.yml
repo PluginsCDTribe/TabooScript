@@ -1,5 +1,11 @@
 name: TabooScript
-authors: [IzzelAliz, Bkm016]
-main: com.ilummc.tlib.scripting.TabooScriptMain
+main: com.ilummc.tlib.scripting.TabooScript
 version: @version@
-softdepend: [TabooLib]
+
+author: [IzzelAliz, 坏黑]
+depend: [TabooLib]
+
+commands:
+  tabooscript:
+    aliases: [tscript, ts]
+    permission: tabooscript.admin

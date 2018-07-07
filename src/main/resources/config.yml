@@ -1,0 +1,32 @@
+# 脚本跟目录
+# 将会载入该目录下所有以 ".groovy" 结尾的文件
+# 如果文件以 "-" 开头则不会载入
+scriptDir: 'plugins/TabooScript/scripts'
+
+# 脚本默认名称前缀
+# 如果没有为脚本设置名称，则会根据文件名称命名
+scriptPrefix: 'ts_'
+
+# 脚本插件名称前缀
+# 脚本将会以插件的形式载入到服务器当中，并使用该前缀。
+pluginPrefix: '#'
+
+# 触发器检查范围
+# 以下包中的触发器将不需要补全包名
+# 如 "org.bukkit.event.player.AsyncPlayerChatEvent" 则可以省略为 "AsyncPlayerChatEvent"
+eventPackages:
+- org.bukkit.event.block
+- org.bukkit.event.command
+- org.bukkit.event.enchantment
+- org.bukkit.event.entity
+- org.bukkit.event.hanging
+- org.bukkit.event.inventory
+- org.bukkit.event.player
+- org.bukkit.event.server
+- org.bukkit.event.vehicle
+- org.bukkit.event.weather
+- org.bukkit.event.world
+- org.spigotmc.event.player
+- org.spigotmc.event.entity
+- me.skymc.taboolib.events
+- me.skymc.taboolib.events.itag
