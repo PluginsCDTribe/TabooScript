@@ -9,6 +9,7 @@ import com.ilummc.tlib.scripting.bstats.Metrics;
 import com.ilummc.tlib.scripting.bukkit.GroovyPluginLoader;
 import com.ilummc.tlib.scripting.script.EntityAPI;
 import com.ilummc.tlib.scripting.script.LocationAPI;
+import com.ilummc.tlib.scripting.script.NumberAPI;
 import com.ilummc.tlib.scripting.script.TabooLibAPI;
 import me.skymc.taboolib.commands.internal.TBaseCommand;
 import me.skymc.taboolib.fileutils.ConfigUtils;
@@ -65,6 +66,7 @@ public class TabooScript extends JavaPlugin {
     private void registerProperty() {
         TabooScriptAPI.registerProperty("tlib", TabooLibAPI.class);
         TabooScriptAPI.registerProperty("taboolib", TabooLibAPI.class);
+        TabooScriptAPI.registerProperty("number", NumberAPI.class);
         TabooScriptAPI.registerProperty("entity", EntityAPI.class);
         TabooScriptAPI.registerProperty("location", LocationAPI.class);
     }
