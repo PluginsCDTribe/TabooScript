@@ -1,4 +1,4 @@
-
+/*
 plugin.onEnable {
     // 两种监听方式
     listen { org.bukkit.event.player.AsyncPlayerChatEvent event ->
@@ -21,12 +21,32 @@ plugin.onEnable {
     }
 
     listen('AsyncPlayerChatEvent') {
-        if (it.message == 'test2')
-            it.player.sendMessage 'No type register'
+        it.message = '§a' + it.message
     }
 }
 
 plugin.description {
     name 'Test'
     version '1.0'
+}
+*/
+def map = [age: 1, name: "2333"]
+
+
+def call(@DelegatesTo(A) Closure closure) {
+    A a = new A()
+    closure.rehydrate(a, a, a)()
+}
+
+call {
+    new B()
+}
+
+
+class B {
+
+}
+
+class A {
+
 }

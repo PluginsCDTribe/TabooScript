@@ -81,11 +81,11 @@ public class GroovyPluginApi extends PropertyGroovyObject {
         return onEnable;
     }
 
-    public void setOnEnable(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_ONLY) Closure onEnable) {
+    public void setOnEnable(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_FIRST) Closure onEnable) {
         this.onEnable = onEnable.rehydrate(this, this, this);
     }
 
-    public void onEnable(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_ONLY) Closure onEnable) {
+    public void onEnable(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_FIRST) Closure onEnable) {
         setOnEnable(onEnable);
     }
 
@@ -93,11 +93,11 @@ public class GroovyPluginApi extends PropertyGroovyObject {
         return onLoad;
     }
 
-    public void setOnLoad(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_ONLY) Closure onLoad) {
+    public void setOnLoad(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_FIRST) Closure onLoad) {
         this.onLoad = onLoad.rehydrate(this, this, this);
     }
 
-    public void onLoad(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_ONLY) Closure onLoad) {
+    public void onLoad(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_FIRST) Closure onLoad) {
         setOnLoad(onLoad);
     }
 
@@ -105,11 +105,11 @@ public class GroovyPluginApi extends PropertyGroovyObject {
         return onDisable;
     }
 
-    public void setOnDisable(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_ONLY) Closure onDisable) {
+    public void setOnDisable(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_FIRST) Closure onDisable) {
         onDisable(onDisable);
     }
 
-    public void onDisable(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_ONLY) Closure onDisable) {
+    public void onDisable(@DelegatesTo(value = GroovyPluginApi.class, strategy = Closure.DELEGATE_FIRST) Closure onDisable) {
         this.onDisable = onDisable.rehydrate(this, this, this);
     }
 
