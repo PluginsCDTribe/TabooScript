@@ -79,11 +79,11 @@ public class GroovyProcessor extends GroovyProperty {
         return onEnable;
     }
 
-    public void setOnEnable(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_ONLY) Closure onEnable) {
+    public void setOnEnable(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_FIRST) Closure onEnable) {
         this.onEnable = onEnable.rehydrate(this, this, this);
     }
 
-    public void onEnable(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_ONLY) Closure onEnable) {
+    public void onEnable(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_FIRST) Closure onEnable) {
         setOnEnable(onEnable);
     }
 
@@ -91,11 +91,11 @@ public class GroovyProcessor extends GroovyProperty {
         return onLoad;
     }
 
-    public void setOnLoad(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_ONLY) Closure onLoad) {
+    public void setOnLoad(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_FIRST) Closure onLoad) {
         this.onLoad = onLoad.rehydrate(this, this, this);
     }
 
-    public void onLoad(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_ONLY) Closure onLoad) {
+    public void onLoad(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_FIRST) Closure onLoad) {
         setOnLoad(onLoad);
     }
 
@@ -103,21 +103,21 @@ public class GroovyProcessor extends GroovyProperty {
         return onDisable;
     }
 
-    public void setOnDisable(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_ONLY) Closure onDisable) {
+    public void setOnDisable(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_FIRST) Closure onDisable) {
         onDisable(onDisable);
     }
 
-    public void onDisable(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_ONLY) Closure onDisable) {
+    public void onDisable(@DelegatesTo(value = GroovyProcessor.class, strategy = Closure.DELEGATE_FIRST) Closure onDisable) {
         this.onDisable = onDisable.rehydrate(this, this, this);
     }
 
-    public void setDescription(@DelegatesTo(value = GroovyDescription.class, strategy = Closure.DELEGATE_ONLY) Closure description) {
+    public void setDescription(@DelegatesTo(value = GroovyDescription.class, strategy = Closure.DELEGATE_FIRST) Closure description) {
         description(description);
     }
 
     private GroovyDescription spec = new GroovyDescription();
 
-    public void description(@DelegatesTo(value = GroovyDescription.class, strategy = Closure.DELEGATE_ONLY) Closure description) {
+    public void description(@DelegatesTo(value = GroovyDescription.class, strategy = Closure.DELEGATE_FIRST) Closure description) {
         Closure rehydrate = description.rehydrate(spec, this, this);
         rehydrate.call();
     }

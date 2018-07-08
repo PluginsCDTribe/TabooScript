@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/TabooScript.iml" filepath="$PROJECT_DIR$/TabooScript.iml" />
       <module fileurl="file://$PROJECT_DIR$/../TabooScriptDocs/TabooScriptDocs.iml" filepath="$PROJECT_DIR$/../TabooScriptDocs/TabooScriptDocs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TabooScript_main.iml" filepath="$PROJECT_DIR$/.idea/modules/TabooScript_main.iml" group="TabooScript" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TabooScript_test.iml" filepath="$PROJECT_DIR$/.idea/modules/TabooScript_test.iml" group="TabooScript" />
     </modules>
   </component>
 </project>
