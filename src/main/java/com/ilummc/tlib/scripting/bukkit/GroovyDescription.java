@@ -8,8 +8,13 @@ import java.util.Arrays;
 
 public class GroovyDescription {
 
-    private String name, version, website, description;
-    private String[] depend, softdepend, authors;
+    private String name;
+    private String version;
+    private String website = "";
+    private String description = "";
+    private String[] depend = new String[0];
+    private String[] softDepend = new String[0];
+    private String[] authors = new String[0];
 
     public GroovyDescription name(String name) {
         this.name = TabooScript.getConf().getString("pluginPrefix") + name;
@@ -27,7 +32,7 @@ public class GroovyDescription {
     }
 
     public GroovyDescription softdepend(String... softdepend) {
-        this.softdepend = softdepend;
+        this.softDepend = softdepend;
         return this;
     }
 
@@ -42,8 +47,8 @@ public class GroovyDescription {
         if (depend != null) {
             setField(file, "depend", Arrays.asList(depend));
         }
-        if (softdepend != null) {
-            setField(file, "softDepend", Arrays.asList(softdepend));
+        if (softDepend != null) {
+            setField(file, "softDepend", Arrays.asList(softDepend));
         }
         if (authors != null) {
             setField(file, "authors", Arrays.asList(authors));

@@ -1,11 +1,21 @@
 package com.ilummc.tlib.scripting.script;
 
+import com.ilummc.tlib.scripting.TabooScript;
+import me.skymc.taboolib.commands.TabooLibExecuteCommand;
 import me.skymc.taboolib.display.ActionUtils;
 import me.skymc.taboolib.display.TitleUtils;
+import me.skymc.taboolib.economy.EcoUtils;
+import me.skymc.taboolib.fileutils.FileUtils;
+import me.skymc.taboolib.inventory.InventoryUtil;
 import me.skymc.taboolib.itagapi.TagDataHandler;
 import me.skymc.taboolib.json.tellraw.TellrawJson;
 import me.skymc.taboolib.particle.EffLib;
+import me.skymc.taboolib.playerdata.DataUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 public class TabooLibAPI {
@@ -42,5 +52,41 @@ public class TabooLibAPI {
 
     public TagDataHandler tagHandler() {
         return TagDataHandler.getHandler();
+    }
+
+    public double money(Player player) {
+        return EcoUtils.get(player);
+    }
+
+    public void moneyGive(Player player, double money) {
+        EcoUtils.add(player, money);
+    }
+
+    public void moneyTake(Player player, double money) {
+        EcoUtils.remove(player, money);
+    }
+
+    public boolean itemHave(Player player, ItemStack item) {
+        return InventoryUtil.hasItem(player, item, 1, false);
+    }
+
+    public boolean itemHave(Player player, ItemStack item, int amount) {
+        return InventoryUtil.hasItem(player, item, amount, false);
+    }
+
+    public boolean itemHave(Player player, ItemStack item, int amount, boolean take) {
+        return InventoryUtil.hasItem(player, item, amount, take);
+    }
+
+    public void executeCommand(CommandSender sender, String command) {
+        TabooLibExecuteCommand.dispatchCommand(sender, command);
+    }
+
+    public FileConfiguration createData(String name, Plugin plugin) {
+        return DataUtils.setPluginData(DataUtils.getFixedFileName(name), plugin, YamlConfiguration.loadConfiguration(FileUtils.file(plugin == null ? TabooScript.getInst().getScriptFolder() : plugin.getDataFolder(), DataUtils.getFixedFileName(name))));
+    }
+
+    public FileConfiguration createYaml(String name, Plugin plugin) {
+        return YamlConfiguration.loadConfiguration(FileUtils.file(plugin == null ? TabooScript.getInst().getScriptFolder() : plugin.getDataFolder(), DataUtils.getFixedFileName(name)));
     }
 }

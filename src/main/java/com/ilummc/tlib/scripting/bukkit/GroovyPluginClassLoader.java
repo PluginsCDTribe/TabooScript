@@ -1,5 +1,6 @@
 package com.ilummc.tlib.scripting.bukkit;
 
+import com.ilummc.tlib.scripting.TabooScript;
 import groovy.lang.GroovyClassLoader;
 import org.bukkit.plugin.Plugin;
 import org.codehaus.groovy.ast.ClassNode;
@@ -80,7 +81,7 @@ public final class GroovyPluginClassLoader extends GroovyClassLoader implements 
 
     @Override
     public Class parseClass(String text) throws CompilationFailedException {
-        return super.parseClass(text, "ts_" + name);
+        return super.parseClass(text, TabooScript.getConf().getString("scriptPrefix") + name);
     }
 
     public static void clearClass(String name) {

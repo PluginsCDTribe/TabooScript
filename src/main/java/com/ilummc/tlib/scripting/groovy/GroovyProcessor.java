@@ -215,5 +215,4 @@ public class GroovyProcessor extends GroovyProperty {
     public void broadcast(String text) {
         Bukkit.broadcastMessage(text);
     }
-
 }

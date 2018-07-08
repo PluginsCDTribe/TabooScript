@@ -22,5 +22,4 @@ public class InternalAPI {
         closure.rehydrate(builder, this, this).call();
         return builder.toItemStack();
     }
-
 }

@@ -159,8 +159,9 @@ public class ItemStackBuilder {
 
     @Deprecated
     public ItemStackBuilder data(int byteData) {
-        if (ins.getType() != null)
+        if (ins.getType() != null) {
             ins.setData(ins.getType().getNewData((byte) byteData));
+        }
         return this;
     }
 
