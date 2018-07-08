@@ -43,7 +43,6 @@ public final class GroovyPluginClassLoader extends GroovyClassLoader implements 
 
     private final Map<String, Class<?>> classMap = new ConcurrentHashMap<>();
 
-    // 用于 TabooLib 找插件
     Plugin plugin;
 
     private String name;
@@ -59,12 +58,11 @@ public final class GroovyPluginClassLoader extends GroovyClassLoader implements 
 
     @Override
     protected ClassCollector createCollector(CompilationUnit unit, SourceUnit su) {
-        InnerLoader loader = AccessController.doPrivileged((PrivilegedAction<InnerLoader>)
-                () -> new InnerLoader(this));
+        InnerLoader loader = AccessController.doPrivileged((PrivilegedAction<InnerLoader>) () -> new InnerLoader(this));
         return collector = new Collector(loader, unit, su);
     }
 
-    private class Collector extends GroovyClassLoader.ClassCollector {
+    private class Collector extends ClassCollector {
 
         Collector(InnerLoader cl, CompilationUnit unit, SourceUnit su) {
             super(cl, unit, su);
@@ -86,15 +84,11 @@ public final class GroovyPluginClassLoader extends GroovyClassLoader implements 
     }
 
     public static void clearClass(String name) {
-        for (GroovyPluginClassLoader loader : LOADERS) {
-            loader.removeClass(name);
-        }
+        LOADERS.forEach(loader -> loader.removeClass(name));
     }
 
     public static void clearClasses() {
-        for (GroovyPluginClassLoader loader : LOADERS) {
-            loader.removeClasses();
-        }
+        LOADERS.forEach(GroovyPluginClassLoader::removeClasses);
     }
 
     public void removeClass(String name) {
@@ -112,15 +106,23 @@ public final class GroovyPluginClassLoader extends GroovyClassLoader implements 
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof GroovyPluginClassLoader)) {
+            return false;
+        }
         GroovyPluginClassLoader that = (GroovyPluginClassLoader) o;
-        return Objects.equals(classMap, that.classMap);
+        return id == that.id &&
+                Objects.equals(classMap, that.classMap) &&
+                Objects.equals(plugin, that.plugin) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(collector, that.collector);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(classMap);
+        return Objects.hash(id, classMap, plugin, name, collector);
     }
 
     void setPlugin(Plugin plugin) {
@@ -129,8 +131,6 @@ public final class GroovyPluginClassLoader extends GroovyClassLoader implements 
 
     @Override
     public int compareTo(@Nullable Object o) {
-        if (o instanceof GroovyPluginClassLoader) return this.id - ((GroovyPluginClassLoader) o).id;
-        return -1;
+        return o instanceof GroovyPluginClassLoader ? this.id - ((GroovyPluginClassLoader) o).id : -1;
     }
-
 }

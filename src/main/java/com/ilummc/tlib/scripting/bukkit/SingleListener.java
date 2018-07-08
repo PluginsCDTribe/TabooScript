@@ -13,14 +13,14 @@ public interface SingleListener extends Listener, EventExecutor {
 
     Class<? extends Event> getType();
 
+    EventPriority getPriority();
+
+    boolean ignoreCancelled();
+
     @Override
     default void execute(Listener listener, Event event) throws EventException {
         execute(event);
     }
-
-    EventPriority getPriority();
-
-    boolean ignoreCancelled();
 
     static SingleListener of(Class<? extends Event> clazz, EventPriority priority, boolean ignoreCancelled, Closure closure) {
         return new SingleListener() {
