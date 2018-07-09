@@ -42,7 +42,7 @@ public class GroovyDescription {
     }
 
     public PluginDescriptionFile toDescription(Object main) {
-        PluginDescriptionFile file = new PluginDescriptionFile(name == null ? "#" + main.getClass().getSimpleName() : name, version == null ? "1.0" : version, main.getClass().getName());
+        PluginDescriptionFile file = new PluginDescriptionFile(name == null ? TabooScript.getConf().getString("pluginPrefix") + main.getClass().getSimpleName() : name, version == null ? "1.0" : version, main.getClass().getName());
         setField(file, "rawName", file.getName());
         if (depend != null) {
             setField(file, "depend", Arrays.asList(depend));
@@ -82,8 +82,7 @@ public class GroovyDescription {
     }
 
     public GroovyDescription author(String author) {
-        this.authors = new String[]{author};
+        this.authors = new String[] {author};
         return this;
     }
-
 }

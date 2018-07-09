@@ -6,9 +6,11 @@ import com.ilummc.tlib.resources.TLocale;
 import com.ilummc.tlib.scripting.bukkit.EventRegistrar;
 import com.ilummc.tlib.scripting.bukkit.GroovyDescription;
 import com.ilummc.tlib.scripting.bukkit.GroovyPlugin;
+import com.ilummc.tlib.scripting.monitor.PluginMonitor;
 import com.ilummc.tlib.scripting.script.InternalAPI;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import me.skymc.taboolib.other.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -18,30 +20,29 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class GroovyProcessor extends GroovyProperty {
 
     private final GroovyPlugin plugin;
-
     private final InternalAPI api = InternalAPI.INSTANCE;
-
     private final Server bukkit = Bukkit.getServer();
+
+    private Closure onLoad = Closure.IDENTITY;
+    private Closure onEnable = Closure.IDENTITY;
+    private Closure onDisable = Closure.IDENTITY;
+
+    private GroovyDescription description = new GroovyDescription();
 
     public GroovyProcessor(GroovyPlugin plugin) {
         super();
         this.plugin = plugin;
     }
-
-    private Closure onLoad = Closure.IDENTITY;
-    private Closure onEnable = Closure.IDENTITY;
-    private Closure onDisable = Closure.IDENTITY;
 
     @SuppressWarnings("unchecked")
     public void onCommand(String cmd, Closure onCommand) {
@@ -55,10 +56,7 @@ public class GroovyProcessor extends GroovyProperty {
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
                 PluginCommand command = constructor.newInstance(cmd, plugin);
-                command.setExecutor((sender, command1, label, args) -> {
-                    onCommand.call(sender, args);
-                    return true;
-                });
+                command.setExecutor((sender, command1, label, args) -> NumberUtils.getBoolean(String.valueOf(onCommand.call(sender, args))));
                 command.setTabCompleter((sender, command12, alias, args) -> ImmutableList.of());
                 commandMap.register(cmd, command);
                 Field commandsF = plugin.getDescription().getClass().getDeclaredField("commands");
@@ -72,6 +70,17 @@ public class GroovyProcessor extends GroovyProperty {
             } catch (Exception e) {
                 TLocale.Logger.error("COMMAND_REGISTER_ERROR", e.toString());
             }
+        }
+    }
+
+    public void onTabCompleter(String cmd, Closure onTabCompleter) {
+        PluginCommand command = Bukkit.getPluginCommand(cmd);
+        if (command == null) {
+            TLocale.Logger.error("COMMAND_NOT_REGISTER", cmd);
+        } else if (onTabCompleter.getParameterTypes().length < 2) {
+            TLocale.Logger.warn("COMMAND_ARGS_LENGTH");
+        } else {
+            command.setTabCompleter((sender, command1, label, args) -> (List<String>) onTabCompleter.call(sender, args));
         }
     }
 
@@ -115,10 +124,8 @@ public class GroovyProcessor extends GroovyProperty {
         description(description);
     }
 
-    private GroovyDescription spec = new GroovyDescription();
-
     public void description(@DelegatesTo(value = GroovyDescription.class, strategy = Closure.DELEGATE_FIRST) Closure description) {
-        Closure rehydrate = description.rehydrate(spec, this, this);
+        Closure rehydrate = description.rehydrate(this.description, this, this);
         rehydrate.call();
     }
 
@@ -135,7 +142,7 @@ public class GroovyProcessor extends GroovyProperty {
     }
 
     public PluginDescriptionFile toDescription(Object main) {
-        return spec.toDescription(main);
+        return description.toDescription(main);
     }
 
     public void listen(Closure closure) {
@@ -175,28 +182,28 @@ public class GroovyProcessor extends GroovyProperty {
         EventRegistrar.register(eventClazz, priority, ignoreCancelled, closure, plugin);
     }
 
-    public void asyncTask(int delay, int period, Closure closure) {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, closure::call, delay, period);
+    public BukkitTask asyncTask(int delay, int period, Closure closure) {
+        return new GroovyTask(closure).runTaskTimerAsynchronously(plugin, delay, period);
     }
 
-    public void asyncTask(int delay, Closure closure) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, closure::call, delay);
+    public BukkitTask asyncTask(int delay, Closure closure) {
+        return new GroovyTask(closure).runTaskLaterAsynchronously(plugin, delay);
     }
 
-    public void asyncTask(Closure closure) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, closure::call);
+    public BukkitTask asyncTask(Closure closure) {
+        return new GroovyTask(closure).runTaskAsynchronously(plugin);
     }
 
-    public void task(int delay, int period, Closure closure) {
-        Bukkit.getScheduler().runTaskTimer(plugin, closure::call, delay, period);
+    public BukkitTask task(int delay, int period, Closure closure) {
+        return new GroovyTask(closure).runTaskTimer(plugin, delay, period);
     }
 
-    public void task(int delay, Closure closure) {
-        Bukkit.getScheduler().runTaskLater(plugin, closure::call, delay);
+    public BukkitTask task(int delay, Closure closure) {
+        return new GroovyTask(closure).runTaskLater(plugin, delay);
     }
 
-    public void task(Closure closure) {
-        Bukkit.getScheduler().runTask(plugin, closure::call);
+    public BukkitTask task(Closure closure) {
+        return new GroovyTask(closure).runTask(plugin);
     }
 
     public Object service(String name) {
@@ -214,5 +221,23 @@ public class GroovyProcessor extends GroovyProperty {
 
     public void broadcast(String text) {
         Bukkit.broadcastMessage(text);
+    }
+
+    private class GroovyTask extends BukkitRunnable {
+
+        private final Closure run;
+
+        private GroovyTask(Closure closure) {
+            this.run = closure.rehydrate(this, this, this);
+        }
+
+        @Override
+        public void run() {
+            try {
+                run.call();
+            } catch (Throwable e) {
+                PluginMonitor.printTaskError(plugin, e);
+            }
+        }
     }
 }

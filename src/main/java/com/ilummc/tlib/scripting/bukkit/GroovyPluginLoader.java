@@ -100,15 +100,15 @@ public class GroovyPluginLoader implements PluginLoader {
             if (plugin.isEnabled()) {
                 plugin.onDisable();
                 GroovyPluginClassLoader.LOADERS.stream().filter(loader -> loader.plugin == plugin).forEach(GroovyPluginClassLoader::removeClasses);
-                fileMap.remove(((GroovyPlugin) plugin).getFile());
-                pluginMap.remove(((GroovyPlugin) plugin).getFile().getName().split("\\.")[0]);
                 TLocale.Logger.info("DISABLE_SCRIPT_SUCCESS", plugin.toString());
             } else {
                 TLocale.Logger.info("DISABLE_SCRIPT_NOT_ENABLE", plugin.toString());
             }
         } catch (Throwable e) {
             TLocale.Logger.error("DISABLE_SCRIPT_FAILED", plugin.toString(), e.toString());
-            e.printStackTrace();
+        } finally {
+            fileMap.remove(((GroovyPlugin) plugin).getFile());
+            pluginMap.remove(((GroovyPlugin) plugin).getFile().getName().split("\\.")[0]);
         }
     }
 
@@ -141,11 +141,11 @@ public class GroovyPluginLoader implements PluginLoader {
                 ((GroovyObject) o).setProperty("api", InternalAPI.INSTANCE);
                 ((GroovyObject) o).invokeMethod("run", new Object[0]);
                 PluginDescriptionFile descriptionFile = api.toDescription(o);
-                pluginMap.put(file.getName().split("\\.")[0], plugin);
-                fileMap.put(file, plugin);
                 loader.setPlugin(plugin);
                 plugin.setDescription(descriptionFile);
                 TabooScriptAPI.addProperties(plugin);
+                pluginMap.put(file.getName().split("\\.")[0], plugin);
+                fileMap.put(file, plugin);
                 return Entries.of(descriptionFile, plugin);
             } else {
                 TLocale.Logger.warn("LOADING_SCRIPT_INVALID", file.getName());

@@ -1,5 +1,6 @@
 package com.ilummc.tlib.scripting.bukkit;
 
+import com.ilummc.tlib.scripting.monitor.PluginMonitor;
 import groovy.lang.Closure;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
@@ -22,14 +23,14 @@ public interface SingleListener extends Listener, EventExecutor {
         execute(event);
     }
 
-    static SingleListener of(Class<? extends Event> clazz, EventPriority priority, boolean ignoreCancelled, Closure closure) {
+    static SingleListener of(Class<? extends Event> clazz, EventPriority priority, boolean ignoreCancelled, GroovyPlugin plugin, Closure closure) {
         return new SingleListener() {
             @Override
-            public void execute(Object event) throws EventException {
+            public void execute(Object event) {
                 try {
                     closure.call(event);
-                } catch (Exception e) {
-                    throw new EventException(e);
+                } catch (Throwable e) {
+                    PluginMonitor.printEventError(plugin, e, clazz.getSimpleName());
                 }
             }
 

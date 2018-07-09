@@ -73,7 +73,6 @@ public class TabooScriptCommand extends BaseMainCommand {
                 TLocale.sendTo(sender, "PLUGIN_COMMAND_ENABLE_SUCCESS", name);
             } catch (Exception e) {
                 TLocale.sendTo(sender, "PLUGIN_COMMAND_ENABLE_FAILED", name, e.toString());
-                e.printStackTrace();
             }
         }
     };

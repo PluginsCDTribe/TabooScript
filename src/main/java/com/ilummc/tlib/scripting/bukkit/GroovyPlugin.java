@@ -22,19 +22,19 @@ import java.util.logging.Logger;
 
 public class GroovyPlugin extends PluginBase implements Plugin {
 
-    private boolean enabled = false;
-
+    private File file;
+    private String nameOrigin;
     private GroovyProcessor api;
     private GroovyPluginLoader loader;
     private GroovyObject groovyObject;
-
     private PluginDescriptionFile description;
-    private File file;
+    private boolean enabled = false;
 
     public GroovyPlugin(GroovyPluginLoader loader, GroovyObject groovyObject, File file) {
-        this.loader = loader;
-        this.groovyObject = groovyObject;
         this.file = file;
+        this.loader = loader;
+        this.nameOrigin = groovyObject.getClass().getSimpleName();
+        this.groovyObject = groovyObject;
     }
 
     public File getFile() {
@@ -177,4 +177,7 @@ public class GroovyPlugin extends PluginBase implements Plugin {
         api.setProperty(name, object);
     }
 
+    public String getNameOrigin() {
+        return nameOrigin;
+    }
 }

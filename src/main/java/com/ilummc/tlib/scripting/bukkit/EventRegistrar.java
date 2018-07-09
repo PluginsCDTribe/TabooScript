@@ -1,11 +1,12 @@
 package com.ilummc.tlib.scripting.bukkit;
 
 import com.ilummc.tlib.scripting.TabooScript;
+import com.ilummc.tlib.scripting.monitor.PluginMonitor;
 import groovy.lang.Closure;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.IllegalPluginAccessException;
 
 import java.util.Optional;
 
@@ -22,9 +23,17 @@ public class EventRegistrar {
     }
 
     @SuppressWarnings("unchecked")
-    public static void register(Class<?> clazz, EventPriority priority, boolean ignoreCancelled, Closure closure, Plugin plugin) {
+    public static void register(Class<?> clazz, EventPriority priority, boolean ignoreCancelled, Closure closure, GroovyPlugin plugin) {
         if (isSubClass(clazz, Event.class)) {
-            Bukkit.getPluginManager().registerEvents(SingleListener.of(((Class<? extends Event>) clazz), priority, ignoreCancelled, closure), plugin);
+            try {
+                Bukkit.getPluginManager().registerEvents(SingleListener.of(((Class<? extends Event>) clazz), priority, ignoreCancelled, plugin, closure), plugin);
+            } catch (IllegalPluginAccessException e) {
+                if (e.getMessage().contains("Plugin attempted to register") || e.getMessage().contains("while not enabled")) {
+                    PluginMonitor.printEventRegisterError(plugin, e, clazz.getSimpleName(), "Plugin attempted to register listener while not enabled");
+                } else {
+                    throw new IllegalPluginAccessException(e.getMessage());
+                }
+            }
         }
     }
 
