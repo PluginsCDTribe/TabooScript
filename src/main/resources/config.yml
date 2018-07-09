@@ -61,10 +61,14 @@ defaultImport:
 - org.bukkit.boss.BarFlag
 - org.bukkit.boss.BarStyle
 - org.bukkit.boss.BossBar
+- org.bukkit.event.inventory.ClickType
+- org.bukkit.event.inventory.InventoryType
 - org.bukkit.enchantments.Enchantment
+- org.bukkit.inventory.Inventory
 - org.bukkit.inventory.InventoryHolder
 - org.bukkit.inventory.InventoryView
 - org.bukkit.inventory.ItemFlag
+- org.bukkit.inventory.ItemStack
 - org.bukkit.inventory.EquipmentSlot
 - org.bukkit.inventory.FurnaceRecipe
 - org.bukkit.inventory.MerchantRecipe
