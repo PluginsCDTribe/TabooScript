@@ -5,6 +5,7 @@ import me.skymc.taboolib.commands.TabooLibExecuteCommand;
 import me.skymc.taboolib.display.ActionUtils;
 import me.skymc.taboolib.display.TitleUtils;
 import me.skymc.taboolib.economy.EcoUtils;
+import me.skymc.taboolib.entity.EntityTag;
 import me.skymc.taboolib.fileutils.FileUtils;
 import me.skymc.taboolib.inventory.InventoryUtil;
 import me.skymc.taboolib.itagapi.TagDataHandler;
@@ -50,8 +51,12 @@ public class TabooLibAPI {
         return TellrawJson.create();
     }
 
-    public TagDataHandler tagHandler() {
+    public TagDataHandler playerTag() {
         return TagDataHandler.getHandler();
+    }
+
+    public EntityTag entityTag() {
+        return EntityTag.getInst();
     }
 
     public double money(Player player) {
