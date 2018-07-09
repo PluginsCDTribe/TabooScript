@@ -37,10 +37,12 @@ public class GroovyProcessor extends GroovyProperty {
     private Closure onEnable = Closure.IDENTITY;
     private Closure onDisable = Closure.IDENTITY;
 
+    private GroovyProcessor inst;
     private GroovyDescription description = new GroovyDescription();
 
     public GroovyProcessor(GroovyPlugin plugin) {
         super();
+        this.inst = this;
         this.plugin = plugin;
     }
 
@@ -183,27 +185,27 @@ public class GroovyProcessor extends GroovyProperty {
     }
 
     public BukkitTask asyncTask(int delay, int period, Closure closure) {
-        return new GroovyTask(closure).runTaskTimerAsynchronously(plugin, delay, period);
+        return new GroovyTask(inst, closure).runTaskTimerAsynchronously(plugin, delay, period);
     }
 
     public BukkitTask asyncTask(int delay, Closure closure) {
-        return new GroovyTask(closure).runTaskLaterAsynchronously(plugin, delay);
+        return new GroovyTask(inst, closure).runTaskLaterAsynchronously(plugin, delay);
     }
 
     public BukkitTask asyncTask(Closure closure) {
-        return new GroovyTask(closure).runTaskAsynchronously(plugin);
+        return new GroovyTask(inst, closure).runTaskAsynchronously(plugin);
     }
 
     public BukkitTask task(int delay, int period, Closure closure) {
-        return new GroovyTask(closure).runTaskTimer(plugin, delay, period);
+        return new GroovyTask(inst, closure).runTaskTimer(plugin, delay, period);
     }
 
     public BukkitTask task(int delay, Closure closure) {
-        return new GroovyTask(closure).runTaskLater(plugin, delay);
+        return new GroovyTask(inst, closure).runTaskLater(plugin, delay);
     }
 
     public BukkitTask task(Closure closure) {
-        return new GroovyTask(closure).runTask(plugin);
+        return new GroovyTask(inst, closure).runTask(plugin);
     }
 
     public Object service(String name) {
@@ -227,8 +229,8 @@ public class GroovyProcessor extends GroovyProperty {
 
         private final Closure run;
 
-        private GroovyTask(Closure closure) {
-            this.run = closure.rehydrate(this, this, this);
+        private GroovyTask(GroovyProcessor owner, Closure closure) {
+            this.run = closure.rehydrate(this, owner, owner);
         }
 
         @Override
