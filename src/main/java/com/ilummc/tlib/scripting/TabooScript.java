@@ -65,6 +65,7 @@ public class TabooScript extends JavaPlugin {
         TabooScriptAPI.registerProperty("tlib", TabooLibAPI.class);
         TabooScriptAPI.registerProperty("taboolib", TabooLibAPI.class);
         // Bukkit
+        TabooScriptAPI.registerProperty("yaml", YamlAPI.class);
         TabooScriptAPI.registerProperty("sound", SoundAPI.class);
         TabooScriptAPI.registerProperty("number", NumberAPI.class);
         TabooScriptAPI.registerProperty("entity", EntityAPI.class);
