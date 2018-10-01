@@ -58,7 +58,14 @@ public class GroovyProcessor extends GroovyProperty {
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
                 PluginCommand command = constructor.newInstance(cmd, plugin);
-                command.setExecutor((sender, command1, label, args) -> NumberUtils.getBoolean(String.valueOf(onCommand.call(sender, args))));
+                command.setExecutor((sender, command1, label, args) -> {
+                    try {
+                        return NumberUtils.getBoolean(String.valueOf(onCommand.call(sender, args)));
+                    } catch (Exception e) {
+                        PluginMonitor.printCommandError(plugin, e, command1.getName());
+                        return false;
+                    }
+                });
                 command.setTabCompleter((sender, command12, alias, args) -> ImmutableList.of());
                 commandMap.register(cmd, command);
                 Field commandsF = plugin.getDescription().getClass().getDeclaredField("commands");
@@ -82,7 +89,14 @@ public class GroovyProcessor extends GroovyProperty {
         } else if (onTabCompleter.getParameterTypes().length < 2) {
             TLocale.Logger.warn("COMMAND_ARGS_LENGTH");
         } else {
-            command.setTabCompleter((sender, command1, label, args) -> (List<String>) onTabCompleter.call(sender, args));
+            command.setTabCompleter((sender, command1, label, args) -> {
+                try {
+                    return (List<String>) onTabCompleter.call(sender, args);
+                } catch (Exception e) {
+                    PluginMonitor.printCommandError(plugin, e, command1.getName());
+                    return ImmutableList.of();
+                }
+            });
         }
     }
 

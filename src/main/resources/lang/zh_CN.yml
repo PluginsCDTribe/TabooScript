@@ -1,12 +1,9 @@
 LOADING_SCRIPTS: '&7正在加载脚本 ....'
 LOADING_SCRIPT_INVALID: '&f{0} &7不是一个有效的脚本'
-LOADING_SCRIPT_FAILED: '&4脚本 &c{0} &4加载时发生错误：&c{1}'
 
 ENABLE_SCRIPT_EXISTS: '&4脚本 &c{0} &4已经载入'
-ENABLE_SCRIPT_FAILED: '&4脚本 &c{0} &4启动时发生错误：&c{1}'
 ENABLE_SCRIPT_SUCCESS: '&7脚本 &f{0} &7已载入'
 
-DISABLE_SCRIPT_FAILED: '&7脚本 &f{0} &7卸载时发生错误：&f{1}'
 DISABLE_SCRIPT_SUCCESS: '&7脚本 &f{0} &7已卸载'
 DISABLE_SCRIPT_NOT_ENABLE: '&4脚本 &c{0} &4尚未载入成功, 无法卸载'
 
@@ -55,3 +52,23 @@ PLUGIN_ERROR_EVENT_REGISTER:
 - '&4脚本: &c{1}'
 - '&4原因: &c{2}'
 - '&4位置: &c第 {3} 行'
+PLUGIN_ERROR_COMMAND: 
+- '&4注册 &c{0} &4命令时出现错误!'
+- '&4脚本: &c{1}'
+- '&4原因: &c{2}'
+- '&4位置: &c第 {3} 行'
+PLUGIN_ERROR_LOADING:
+- '&4载入时出现不可预料的错误!'
+- '&4脚本: &c{0}'
+- '&4原因: &c{1}'
+- '&4位置: &c第 {2} 行'
+PLUGIN_ERROR_ENABLE:
+- '&4载入时出现不可预料的错误!'
+- '&4脚本: &c{0}'
+- '&4原因: &c{1}'
+- '&4位置: &c第 {2} 行'
+PLUGIN_ERROR_DISABLE:
+- '&4载入时出现不可预料的错误!'
+- '&4脚本: &c{0}'
+- '&4原因: &c{1}'
+- '&4位置: &c第 {2} 行'

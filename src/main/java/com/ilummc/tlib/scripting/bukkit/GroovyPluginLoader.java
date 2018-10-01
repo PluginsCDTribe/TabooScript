@@ -37,6 +37,14 @@ public class GroovyPluginLoader implements PluginLoader {
         this.server = server;
     }
 
+    public static Map<String, GroovyPlugin> getPlugins() {
+        return pluginMap;
+    }
+
+    public static Pattern[] getPatterns() {
+        return PATTERNS;
+    }
+
     @Override
     public Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException {
         if (fileMap.containsKey(file)) {
@@ -110,14 +118,6 @@ public class GroovyPluginLoader implements PluginLoader {
             fileMap.remove(((GroovyPlugin) plugin).getFile());
             pluginMap.remove(((GroovyPlugin) plugin).getFile().getName().split("\\.")[0]);
         }
-    }
-
-    public static Map<String, GroovyPlugin> getPlugins() {
-        return pluginMap;
-    }
-
-    public static Pattern[] getPatterns() {
-        return PATTERNS;
     }
 
     private Plugin setup(GroovyPlugin plugin) {

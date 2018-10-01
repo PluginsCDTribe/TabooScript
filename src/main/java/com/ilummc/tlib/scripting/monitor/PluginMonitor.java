@@ -13,6 +13,10 @@ public class PluginMonitor {
         TLocale.Logger.error("PLUGIN_ERROR_OTHER", plugin.getName(), e.toString(), getErrorLine(plugin, e));
     }
 
+    public static void printError(GroovyPlugin plugin, Throwable e, String name) {
+        TLocale.Logger.error(name, plugin.getName(), e.toString(), getErrorLine(plugin, e));
+    }
+
     public static void printTaskError(GroovyPlugin plugin, Throwable e) {
         TLocale.Logger.error("PLUGIN_ERROR_TASK", plugin.getName(), e.toString(), getErrorLine(plugin, e));
     }
@@ -23,6 +27,10 @@ public class PluginMonitor {
 
     public static void printEventRegisterError(GroovyPlugin plugin, Throwable e, String event, String message) {
         TLocale.Logger.error("PLUGIN_ERROR_EVENT_REGISTER", event, plugin.getName(), message, getErrorLine(plugin, e));
+    }
+
+    public static void printCommandError(GroovyPlugin plugin, Throwable e, String event) {
+        TLocale.Logger.error("PLUGIN_ERROR_COMMAND", event, plugin.getName(), e.toString(), getErrorLine(plugin, e));
     }
 
     private static String getErrorLine(GroovyPlugin plugin, Throwable e) {
