@@ -4,8 +4,3 @@ version: @version@
 
 author: [IzzelAliz, 坏黑]
 depend: [TabooLib]
-
-commands:
-  tabooscript:
-    aliases: [tscript, ts]
-    permission: tabooscript.admin

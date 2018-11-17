@@ -10,13 +10,12 @@ import org.codehaus.groovy.control.*;
 import org.codehaus.groovy.control.CompilationUnit.SourceUnitOperation;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.CodeSource;
 import java.security.PrivilegedAction;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -97,9 +96,15 @@ public final class GroovyPluginClassLoader extends GroovyClassLoader implements 
             public void call(SourceUnit source) throws CompilationFailedException {
                 ModuleNode ast = source.getAST();
                 for (String className : TabooScript.getConf().getStringList("defaultImport")) {
-                    String simpleName = getSimpleClassName(className);
-                    if (isClassValid(className) && !alreadyImported(simpleName, ast)) {
-                        ast.addImport(simpleName, ClassHelper.make(className));
+                    if (className.endsWith(".*")) {
+                        if (!alreadyStarImported(className.substring(0, className.length() - 1), ast)) {
+                            ast.addStarImport(className.substring(0, className.length() - 1));
+                        }
+                    } else {
+                        String simpleName = getSimpleClassName(className);
+                        if (isClassValid(className) && !alreadyImported(simpleName, ast)) {
+                            ast.addImport(simpleName, ClassHelper.make(className));
+                        }
                     }
                 }
             }
@@ -159,6 +164,10 @@ public final class GroovyPluginClassLoader extends GroovyClassLoader implements 
         return ast.getImport(clazz) != null;
     }
 
+    private boolean alreadyStarImported(String packageName, ModuleNode ast) {
+        return ast.getStarImports().stream().anyMatch(i -> i.getPackageName().equalsIgnoreCase(packageName));
+    }
+
     private String getSimpleClassName(String clazz) {
         return clazz.substring(clazz.lastIndexOf('.') + 1);
     }
@@ -170,5 +179,27 @@ public final class GroovyPluginClassLoader extends GroovyClassLoader implements 
         } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+    public static List<String> getClassName(String packageName) {
+        String filePath = ClassLoader.getSystemResource("").getPath() + packageName.replace(".", "\\");
+        return getClassName(filePath, null);
+    }
+
+    private static List<String> getClassName(String filePath, List<String> className) {
+        List<String> list = new ArrayList<>();
+        File file = new File(filePath);
+        File[] childFiles = file.listFiles();
+        for (File childFile : childFiles) {
+            if (childFile.isDirectory()) {
+                list.addAll(getClassName(childFile.getPath(), list));
+            } else {
+                String childFilePath = childFile.getPath();
+                childFilePath = childFilePath.substring(childFilePath.indexOf("\\classes") + 9, childFilePath.lastIndexOf("."));
+                childFilePath = childFilePath.replace("\\", ".");
+                list.add(childFilePath);
+            }
+        }
+        return list;
     }
 }

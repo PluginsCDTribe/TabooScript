@@ -8,7 +8,6 @@ import com.ilummc.tlib.scripting.api.TabooScriptAPI;
 import com.ilummc.tlib.scripting.bstats.Metrics;
 import com.ilummc.tlib.scripting.bukkit.GroovyPluginLoader;
 import com.ilummc.tlib.scripting.script.*;
-import me.skymc.taboolib.commands.internal.TBaseCommand;
 import me.skymc.taboolib.fileutils.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,6 +30,10 @@ public class TabooScript extends JavaPlugin {
         ins = this;
         logger = TLogger.getUnformatted(this);
 
+        if (!TabooLibSetup.checkVersion(this, 4.6)) {
+            return;
+        }
+
         reloadConfig();
         createFolder();
         registerProperty();
@@ -40,13 +43,11 @@ public class TabooScript extends JavaPlugin {
 
         TLocale.Logger.info("LOADING_SCRIPTS");
         TabooScriptAPI.loadScripts();
-
-        new Metrics(this);
     }
 
     @Override
     public void onEnable() {
-        TBaseCommand.registerCommand("tabooscript", new TabooScriptCommand());
+        new Metrics(this);
         Bukkit.getScheduler().runTask(this, TabooScriptAPI::enableScripts);
     }
 
@@ -62,6 +63,7 @@ public class TabooScript extends JavaPlugin {
 
     private void registerProperty() {
         // TabooLib
+        TabooScriptAPI.registerProperty("lib", TabooLibAPI.class);
         TabooScriptAPI.registerProperty("tlib", TabooLibAPI.class);
         TabooScriptAPI.registerProperty("taboolib", TabooLibAPI.class);
         // Bukkit

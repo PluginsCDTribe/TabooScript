@@ -1,7 +1,6 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 apply plugin: 'java'
-apply plugin: 'groovy'
 
 version = pluginVersion
 
@@ -9,6 +8,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 defaultTasks 'clean', 'build'
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
 
 repositories {
     mavenCentral()
@@ -19,10 +22,9 @@ repositories {
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.0'
     compile 'org.ow2.asm:asm-commons:6.2'
-    implementation 'com.github.Bkm016:TabooLib:master-SNAPSHOT'
+    compile fileTree(dir:'libs',includes:['*jar'])
 }
 
 processResources {

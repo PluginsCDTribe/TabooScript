@@ -5,6 +5,7 @@ import com.ilummc.tlib.scripting.bukkit.GroovyPlugin;
 import com.ilummc.tlib.scripting.bukkit.GroovyPluginLoader;
 import me.skymc.taboolib.commands.internal.BaseMainCommand;
 import me.skymc.taboolib.commands.internal.BaseSubCommand;
+import me.skymc.taboolib.commands.internal.TCommand;
 import me.skymc.taboolib.commands.internal.type.CommandArgument;
 import me.skymc.taboolib.commands.internal.type.CommandRegister;
 import me.skymc.taboolib.fileutils.FileUtils;
@@ -21,6 +22,11 @@ import java.util.Arrays;
  * @Author sky
  * @Since 2018-07-07 15:52
  */
+@TCommand(
+        name = "tabooscript",
+        aliases = {"tscript","ts"},
+        permission = "tabooscript.admin"
+)
 public class TabooScriptCommand extends BaseMainCommand {
 
     @Override

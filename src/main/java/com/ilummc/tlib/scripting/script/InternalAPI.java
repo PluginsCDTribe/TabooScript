@@ -20,8 +20,24 @@ public class InternalAPI {
         return GroovyPluginLoader.getPlugins().get(name).getGroovyObject();
     }
 
+    public HashMap<String, Object> getAll() {
+        return variable;
+    }
+
     public HashMap<String, Object> getVariables() {
         return variable;
+    }
+
+    public Object set(String key, Object value) {
+        return value == null ? variable.remove(key) : variable.put(key, value);
+    }
+
+    public Object get(String key) {
+        return variable.get(key);
+    }
+
+    public Object get(String key, Object def) {
+        return variable.getOrDefault(key, def);
     }
 
     public Object setVariable(String key, Object value) {

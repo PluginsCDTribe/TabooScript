@@ -1,7 +1,6 @@
 package com.ilummc.tlib.scripting.groovy;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.ilummc.tlib.resources.TLocale;
 import com.ilummc.tlib.scripting.bukkit.EventRegistrar;
 import com.ilummc.tlib.scripting.bukkit.GroovyDescription;
@@ -10,22 +9,21 @@ import com.ilummc.tlib.scripting.monitor.PluginMonitor;
 import com.ilummc.tlib.scripting.script.InternalAPI;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import me.skymc.taboolib.commands.builder.SimpleCommandBuilder;
 import me.skymc.taboolib.other.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 public class GroovyProcessor extends GroovyProperty {
 
@@ -46,39 +44,21 @@ public class GroovyProcessor extends GroovyProperty {
         this.plugin = plugin;
     }
 
-    @SuppressWarnings("unchecked")
     public void onCommand(String cmd, Closure onCommand) {
         if (onCommand.getParameterTypes().length < 2) {
             TLocale.Logger.warn("COMMAND_ARGS_LENGTH");
         } else {
-            try {
-                Field commandMapF = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-                commandMapF.setAccessible(true);
-                SimpleCommandMap commandMap = (SimpleCommandMap) commandMapF.get(Bukkit.getServer());
-                Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
-                constructor.setAccessible(true);
-                PluginCommand command = constructor.newInstance(cmd, plugin);
-                command.setExecutor((sender, command1, label, args) -> {
-                    try {
-                        return NumberUtils.getBoolean(String.valueOf(onCommand.call(sender, args)));
-                    } catch (Exception e) {
-                        PluginMonitor.printCommandError(plugin, e, command1.getName());
-                        return false;
-                    }
-                });
-                command.setTabCompleter((sender, command12, alias, args) -> ImmutableList.of());
-                commandMap.register(cmd, command);
-                Field commandsF = plugin.getDescription().getClass().getDeclaredField("commands");
-                commandsF.setAccessible(true);
-                Map<String, Object> map = (Map) commandsF.get(plugin.getDescription());
-                if (map == null) {
-                    map = new HashMap<>(0);
-                }
-                map.put(cmd, ImmutableMap.of());
-                commandsF.set(plugin.getDescription(), map);
-            } catch (Exception e) {
-                TLocale.Logger.error("COMMAND_REGISTER_ERROR", e.toString());
-            }
+            SimpleCommandBuilder.create(cmd, plugin)
+                    .silence()
+                    .execute((sender, args) -> {
+                        try {
+                            Object call = onCommand.call(sender, args);
+                            return call == null ? true : NumberUtils.getBoolean(String.valueOf(call));
+                        } catch (Throwable e) {
+                            PluginMonitor.printCommandError(plugin, e, cmd);
+                            return true;
+                        }
+                    }).build();
         }
     }
 
@@ -92,7 +72,7 @@ public class GroovyProcessor extends GroovyProperty {
             command.setTabCompleter((sender, command1, label, args) -> {
                 try {
                     return (List<String>) onTabCompleter.call(sender, args);
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     PluginMonitor.printCommandError(plugin, e, command1.getName());
                     return ImmutableList.of();
                 }
